@@ -1,34 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase';
 import './App.css'
+import DogList from './components/DogList';
+import DogProfile from './components/DogProfile';
+import PersonalityQuiz from './components/PersonalityQuiz';
+import QuizResults from './components/QuizResults';
+import Register from './components/Register';
+import Login from './components/Login';
+import Logout from './components/Logout';
+import Navbar from './components/NavBar';
+import Account from './components/Account';
+import MyMatches from './components/MyMatches';
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+   <Router>
+     <Navbar user={user} />
+      <Routes>
+        <Route path="/" element={<DogList />} />
+         <Route path="/register" element={<Register />} />
+         <Route path="/login" element={<Login />} />
+         <Route path="/logout" element={<Logout />} />
+         <Route path="/breed/:id" element={<DogProfile />} />
+         <Route path="/quiz" element={<PersonalityQuiz />} />
+         <Route path="/results" element={<QuizResults />} />
+         <Route path="/account" element={<Account />} />
+         <Route path="/matches" element={<MyMatches />} />
+      </Routes>
+    </Router>
   )
 }
 
