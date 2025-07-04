@@ -10,7 +10,7 @@ import QuizResults from './components/QuizResults';
 import Register from './components/Register';
 import Login from './components/Login';
 import Logout from './components/Logout';
-import Navbar from './components/NavBar';
+import Navbar from './components/temp';
 import Account from './components/Account';
 import MyMatches from './components/MyMatches';
 
