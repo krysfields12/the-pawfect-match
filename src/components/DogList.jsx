@@ -22,7 +22,7 @@ const DogList = () => {
   useEffect(() => {
     const fetchBreeds = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/api/dog-breeds');
+        const res = await axios.get('https://the-pawfect-match-7ccn.onrender.com/api/dog-breeds');
         setBreeds(res.data);
 
         const allTemperaments = res.data.flatMap(breed =>

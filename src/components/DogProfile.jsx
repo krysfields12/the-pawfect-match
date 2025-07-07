@@ -11,7 +11,7 @@ const DogProfile = () => {
     useEffect(() => {
         const fetchBreed = async() => {
             try {
-                const res = await axios.get(`http://localhost:8080/api/dog-breeds/${id}`);
+                const res = await axios.get(`https://the-pawfect-match-7ccn.onrender.com/api/dog-breeds/${id}`);
                 setBreed(res.data);
             } catch(err) {
                 console.error("Error fetching breed profile:", err);
