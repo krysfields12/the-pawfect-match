@@ -109,7 +109,9 @@ app.delete('/api/dog-breeds/:id', async (req, res) => {
 
 
 
-const PORT = 8080;
+// eslint-disable-next-line no-undef
+const PORT = process.env.PORT || 8080;
+
 const startServer = async() => {
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}!~`)
