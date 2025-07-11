@@ -1,0 +1,70 @@
+.dog-profile {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border: 1px solid #ccc; 
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.dog-name {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.dog-image {
+  width: 100%;
+  max-width: 400px;
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.dog-details {
+  text-align: left;
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.dog-details strong {
+  color: #000;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #555;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .dog-profile {
+    padding: 1rem;
+  }
+
+  .dog-name {
+    font-size: 2rem;
+  }
+
+  .dog-details {
+    font-size: 0.95rem;
+  }
+}
+
+

@@ -16,13 +16,15 @@ const DogList = () => {
   const [breedGroupOptions, setBreedGroupOptions] = useState([]);
   const [bredForOptions, setBredForOptions] = useState([]);
 
+  console.log(bredForOptions);
+
   const navigate = useNavigate();
-  const breedsPerPage = 10;
+  const breedsPerPage = 9;
 
   useEffect(() => {
     const fetchBreeds = async () => {
       try {
-        const res = await axios.get('https://the-pawfect-match-7ccn.onrender.com/api/dog-breeds');
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/dog-breeds`);
         setBreeds(res.data);
 
         const allTemperaments = res.data.flatMap(breed =>
@@ -44,7 +46,7 @@ const DogList = () => {
   }, []);
 
   useEffect(() => {
-    setCurrentPage(1); // Reset to page 1 when filters change
+    setCurrentPage(1);
   }, [filterSize, filterLifeSpan, selectedTemperament, filterBreedGroup, filterBredFor]);
 
   const filteredBreeds = breeds.filter((breed) => {
@@ -66,116 +68,128 @@ const DogList = () => {
   const indexOfLast = currentPage * breedsPerPage;
   const indexOfFirst = indexOfLast - breedsPerPage;
   const currentBreeds = filteredBreeds.slice(indexOfFirst, indexOfLast);
-
   const totalPages = Math.ceil(filteredBreeds.length / breedsPerPage);
 
   return (
-    <div>
-      <h1>Dog Breeds</h1>
+    <div className="page-wrapper">
+      <div className="dog-list-page">
+        <div className="page-header">
+          <h2 className="page-title">Dog Breeds</h2>
+          <p className="page-subtitle">
+            Discover the perfect companion by exploring breeds below.
+          </p>
+        </div>
 
-      <button
-        className="start-quiz-btn"
-        onClick={() => navigate('/quiz')}
-      >
-        🐾 Take the Personality Quiz
-      </button>
+        <div className="quiz-section">
+          <button className="start-quiz-btn" onClick={() => navigate('/quiz')}>
+            🐾 Take the Personality Quiz
+          </button>
+        </div>
 
-      <div className="filter-bar">
-        <label>
-          Size:
-          <select value={filterSize} onChange={(e) => setFilterSize(e.target.value)}>
-            <option value="All">All</option>
-            <option value="Small">Small</option>
-            <option value="Medium">Medium</option>
-            <option value="Large">Large</option>
-          </select>
-        </label>
+        <div className="filter-bar">
+          <div className="filter-group">
+            <label>
+              <span>Size:</span>
+              <select value={filterSize} onChange={(e) => setFilterSize(e.target.value)}>
+                <option value="All">All</option>
+                <option value="Small">Small</option>
+                <option value="Medium">Medium</option>
+                <option value="Large">Large</option>
+              </select>
+            </label>
 
-        <label>
-          Life Span:
-          <select value={filterLifeSpan} onChange={(e) => setFilterLifeSpan(e.target.value)}>
-            <option value="All">All</option>
-            <option value="Short">Less than 10 years</option>
-            <option value="Medium">10–12 years</option>
-            <option value="Long">13+ years</option>
-          </select>
-        </label>
+            <label>
+              <span>Life Span:</span>
+              <select value={filterLifeSpan} onChange={(e) => setFilterLifeSpan(e.target.value)}>
+                <option value="All">All</option>
+                <option value="Short">Less than 10 years</option>
+                <option value="Medium">10–12 years</option>
+                <option value="Long">13+ years</option>
+              </select>
+            </label>
 
-        <label>
-          Temperament:
-          <select value={selectedTemperament} onChange={(e) => setSelectedTemperament(e.target.value)}>
-            <option value="All">All</option>
-            {temperamentOptions.map((temp) => (
-              <option key={temp} value={temp}>{temp}</option>
-            ))}
-          </select>
-        </label>
+            <label>
+              <span>Temperament:</span>
+              <select value={selectedTemperament} onChange={(e) => setSelectedTemperament(e.target.value)}>
+                <option value="All">All</option>
+                {temperamentOptions.map((temp) => (
+                  <option key={temp} value={temp}>{temp}</option>
+                ))}
+              </select>
+            </label>
 
-        <label>
-          Breed Group:
-          <select value={filterBreedGroup} onChange={(e) => setFilterBreedGroup(e.target.value)}>
-            <option value="All">All</option>
-            {breedGroupOptions.map((group) => (
-              <option key={group} value={group}>{group}</option>
-            ))}
-          </select>
-        </label>
+            <label>
+              <span>Breed Group:</span>
+              <select value={filterBreedGroup} onChange={(e) => setFilterBreedGroup(e.target.value)}>
+                <option value="All">All</option>
+                {breedGroupOptions.map((group) => (
+                  <option key={group} value={group}>{group}</option>
+                ))}
+              </select>
+            </label>
 
-        <label>
-          Bred For:
-          <select value={filterBredFor} onChange={(e) => setFilterBredFor(e.target.value)}>
-            <option value="All">All</option>
-            {bredForOptions.map((role) => (
-              <option key={role} value={role}>{role}</option>
-            ))}
-          </select>
-        </label>
-      </div>
+            {/* <label className="full-width">
+              <span>Bred For:</span>
+              <select value={filterBredFor} onChange={(e) => setFilterBredFor(e.target.value)}>
+                <option value="All">All</option>
+                {bredForOptions.map((role) => (
+                  <option key={role} value={role}>{role}</option>
+                ))}
+              </select>
+            </label> */}
+          </div>
 
-      <div className="breed-list">
-        {currentBreeds.map((breed) => (
-          <div key={breed.id} className="breed-card">
-            <h3>{breed.name}</h3>
-            {breed.image_url && (
-              <img src={breed.image_url} alt={breed.name} width="200" />
-            )}
-            <p><strong>Temperament:</strong> {breed.temperament || 'N/A'}</p>
-            <p><strong>Breed Group:</strong> {breed.breed_group || 'N/A'}</p>
-            <p><strong>Bred For:</strong> {breed.bred_for || 'N/A'}</p>
-            <p><strong>Origin:</strong> {breed.origin || 'N/A'}</p>
+          <div className="filter-actions">
             <button
-              className="view-profile-btn"
-              onClick={() => navigate(`/breed/${breed.id}`)}
+              className="filter-button reset"
+              type="button"
+              onClick={() => {
+                setFilterSize("All");
+                setFilterLifeSpan("All");
+                setSelectedTemperament("All");
+                setFilterBreedGroup("All");
+                setFilterBredFor("All");
+              }}
             >
-              View Profile →
+              Reset
             </button>
           </div>
-        ))}
-      </div>
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          ← Prev
-        </button>
+        </div>
 
-        <span>Page {currentPage} of {totalPages}</span>
+        <div className="breed-list">
+          {currentBreeds.map((breed) => (
+            <div key={breed.id} className="breed-card">
+              <h3>{breed.name}</h3>
+              {breed.image_url && <img src={breed.image_url} alt={breed.name} width="200" />}
+              <p><strong>Temperament:</strong> {breed.temperament || 'N/A'}</p>
+              <p><strong>Breed Group:</strong> {breed.breed_group || 'N/A'}</p>
+              <p><strong>Bred For:</strong> {breed.bred_for || 'N/A'}</p>
+              <p><strong>Origin:</strong> {breed.origin || 'N/A'}</p>
+              <button className="view-profile-btn" onClick={() => navigate(`/breed/${breed.id}`)}>
+                View Profile →
+              </button>
+            </div>
+          ))}
+        </div>
 
-        <button
-          onClick={() =>
-            setCurrentPage(prev =>
-              prev < totalPages ? prev + 1 : prev
-            )
-          }
-          disabled={currentPage === totalPages}
-        >
-          Next →
-        </button>
+        <div className="pagination">
+          <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+            ← Prev
+          </button>
+
+          <span>Page {currentPage} of {totalPages}</span>
+
+          <button onClick={() => setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev))} disabled={currentPage === totalPages}>
+            Next →
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
 export default DogList;
+
+
+
 

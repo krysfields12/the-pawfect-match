@@ -1,14 +1,3 @@
-@media (max-width: 600px) {
-  .breed-card {
-    padding: 15px;
-  }
-
-  .breed-card img {
-    width: 100%;
-    height: auto;
-  }
-}
-
 .breed-list {
   display: flex;
   flex-direction: column;
@@ -18,54 +7,86 @@
 }
 
 .breed-card {
-  background-color: white;
+  background: white;
   border-radius: 12px;
-  padding: 20px;
-  width: 90%;
-  max-width: 600px;
-  text-align: center;
-  color: #333;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease;
-  margin-bottom: 30px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .breed-card:hover {
-  transform: scale(1.02);
-  transition: transition 0.2s ease;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.breed-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #222;
 }
 
 .breed-card img {
-  border-radius: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 25px;
+}
+
+.breed-card p {
+  font-size: 0.95rem;
+  margin: 0.3rem 0;
+  color: #444;
 }
 
 .filter-bar {
+  padding: 1rem 2rem;
+  width: 1000px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  background-color: #5f8fa3;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.filter-group {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  justify-content: center; 
-  align-items: flex-end;
-  padding: 1.5rem 2rem;
-  background-color: #5e8ca5;
-  border-radius: 8px;
-  margin: 30px auto;
-  max-width: 900px;   
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.filter-group label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: white;
 }
 
 
-.filter-bar label {
-  display: flex;
-  flex-direction: column;
-  color: white;
-  font-size: 0.9rem;
-  min-width: 150px;
+.filter-group label.full-width {
+  flex: 1 1 100%;
+}
+
+.filter-group select {
+  width: 140px; 
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.filter-bar label span {
+  margin-bottom: 4px;
 }
 
 .filter-bar select {
   margin-top: 4px;
+  width: 175px;
   padding: 6px;
   background-color: #333;
   color: #fff;
@@ -74,6 +95,34 @@
   font-size: 0.95rem;
 }
 
+.filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.filter-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+
+.filter-button.reset {
+  /* background-color: #cc3366; */
+  background-color: #d23f67;
+  color: white;
+}
+
+.filter-button.apply {
+  background-color: #ffd700;
+  color: black;
+}
+
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -81,7 +130,7 @@
   gap: 1rem;
   margin: 2rem 0;
   font-weight: bold;
-  color: white;
+  color: grey;
 }
 
 .pagination button {
@@ -185,22 +234,98 @@
   color: white;
 }
 
+.dog-list-page {
+  background-color: #f5f7fa;
+  padding: 2rem 1rem;
+}
 
-@media (max-width: 600px) {
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  color: #4a90e2;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.quiz-section {
+  margin-bottom: 2rem;
+}
+
+.breed-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 1.5rem; 
+  row-gap: 4rem;     
+  margin-top: 1rem;   
+}
+
+.view-profile-btn {
+  margin-top: auto;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  background-color: #4185f4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.view-profile-btn:hover {
+  background-color: #2f6fdc;
+}
+
+@media (max-width: 900px) {
+  .breed-list {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 1rem;
+  }
+
   .filter-bar {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+    width: 100%;
     padding: 1rem;
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .filter-bar label {
-    min-width: 100%;
-    max-width: 300px;
-    text-align: left;
+  .filter-group {
+    flex-direction: column;
+    width: 100%;
   }
 
+  .filter-group label,
   .filter-bar select {
     width: 100%;
   }
+
+  .filter-actions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .start-quiz-btn {
+    width: 100%;
+    text-align: center;
+  }
 }
+
+@media (max-width: 600px) {
+  .breed-list {
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
+  }
+
+  .filter-bar {
+    width: 100%;
+    padding: 1rem;
+  }
+}
+

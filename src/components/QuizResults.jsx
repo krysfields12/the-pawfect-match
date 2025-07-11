@@ -22,7 +22,7 @@ const QuizResults = () => {
 
     const fetchAndMatch = async () => {
       try {
-        const res = await axios.get('https://the-pawfect-match-7ccn.onrender.com/api/dog-breeds');
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/dog-breeds`);
         setBreeds(res.data);
 
         const scoredMatches = res.data.map((breed) => {

@@ -1,4 +1,4 @@
-.navbar {
+/* .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,5 +26,38 @@
 }
 
 .nav-links a:hover, .logout-button:hover {
+  text-decoration: underline;
+} */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #4a90e2;
+  padding: 1rem 2rem;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-links a,
+.logout-button {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: white;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.nav-links a:hover,
+.logout-button:hover {
   text-decoration: underline;
 }
