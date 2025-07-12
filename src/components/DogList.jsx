@@ -24,7 +24,7 @@ const DogList = () => {
   useEffect(() => {
     const fetchBreeds = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/dog-breeds`);
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE}/api/dog-breeds`);
         setBreeds(res.data);
 
         const allTemperaments = res.data.flatMap(breed =>

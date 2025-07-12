@@ -12,7 +12,7 @@ const DogProfile = () => {
   useEffect(() => {
     const fetchBreed = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/dog-breeds/${id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE}/api/dog-breeds/${id}`);
         setBreed(res.data);
       } catch (err) {
         console.error("Error fetching breed profile:", err);
