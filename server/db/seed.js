@@ -30,6 +30,7 @@ const seedDogBreeds = async () => {
 
     const breeds = response.data;
 
+
     for (const breed of breeds) {
       const { 
         id: api_id, 

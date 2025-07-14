@@ -98,7 +98,7 @@ const QuizResults = () => {
   }, [answers, navigate]);
 
   return (
-  <div className="quiz-results">
+  <div>
     <h2>Your Perfect Dog Matches 🐶</h2>
 
     {loading ? (

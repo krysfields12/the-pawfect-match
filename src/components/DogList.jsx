@@ -25,7 +25,7 @@ const DogList = () => {
     const fetchBreeds = async () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_API_BASE}/api/dog-breeds`);
-        setBreeds(res.data);
+        setBreeds(res.data);                                           
 
         const allTemperaments = res.data.flatMap(breed =>
           breed.temperament ? breed.temperament.split(',').map(t => t.trim()) : []
