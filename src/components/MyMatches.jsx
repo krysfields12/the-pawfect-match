@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import axios from 'axios';
+import { auth } from '../firebase';
 
 const MyMatches = () => {
   const [matches, setMatches] = useState([]);
@@ -8,19 +8,18 @@ const MyMatches = () => {
 
   useEffect(() => {
     const fetchMatches = async () => {
-      if (!auth.currentUser) {
+      const user = auth.currentUser;
+      if (!user) {
         setLoading(false);
         return;
       }
 
       try {
-        const userDoc = doc(db, 'users', auth.currentUser.uid);
-        const docSnap = await getDoc(userDoc);
-        if (docSnap.exists()) {
-          setMatches(docSnap.data().matches || []);
-        }
+        const userId = user.uid;
+        const response = await axios.get(`http://localhost:8080/api/matches/${userId}`);
+        setMatches(response.data);
       } catch (err) {
-        console.error("Error fetching user matches:", err);
+        console.error('Error fetching matches from backend:', err);
       } finally {
         setLoading(false);
       }
@@ -43,9 +42,9 @@ const MyMatches = () => {
               <h3>{breed.name}</h3>
               {breed.image_url && <img src={breed.image_url} alt={breed.name} width="200" />}
               <p><strong>Temperament:</strong> {breed.temperament || 'N/A'}</p>
-              <p><strong>Group:</strong> {breed.breed_group || 'N/A'}</p>
-              <p><strong>Bred For:</strong> {breed.bred_for || 'N/A'}</p>
-              <p><strong>Origin:</strong> {breed.origin || 'N/A'}</p>
+              <p><strong>Weight:</strong> {breed.weight || 'N/A'}</p>
+              <p><strong>Height:</strong> {breed.height || 'N/A'}</p>
+              <p><strong>Life Span:</strong> {breed.life_span || 'N/A'}</p>
             </div>
           ))}
         </div>
@@ -57,5 +56,3 @@ const MyMatches = () => {
 };
 
 export default MyMatches;
-
-

@@ -2,6 +2,7 @@
 import pkg from 'pg';
 import dotenv from 'dotenv';
 dotenv.config();
+// dotenv.config({ path: '.env.local' });
 
 const { Pool } = pkg;
 
@@ -21,6 +22,7 @@ const pool = new Pool({
   database: process.env.PGDATABASE,
   password: process.env.PGPASSWORD,
   port: process.env.PGPORT,
+  options: '-c search_path=public',
    ssl: {
     rejectUnauthorized: false, 
     require: true              

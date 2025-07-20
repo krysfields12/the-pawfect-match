@@ -50,12 +50,12 @@ app.get('/api/dog-breeds/:id', async (req, res) => {
 
 app.put('/api/dog-breeds/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, breed_group, temperament, life_span, image_url } = req.body;
+  const { name, temperament, life_span, weight, height } = req.body;
 
   try {
     const result = await pool.query(
       'UPDATE dog_breeds SET name = $1, temperament = $2, life_span = $3, weight = $4, height = $5 WHERE id = $6 RETURNING *',
-      [name, breed_group, temperament, life_span, image_url, id]
+      [name, temperament, life_span, weight, height, id]
     );
 
     if (result.rows.length === 0) {
@@ -107,7 +107,33 @@ app.delete('/api/dog-breeds/:id', async (req, res) => {
   }
 });
 
+app.post('/api/matches', async (req, res) => {
+  const { userId, breedId } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO matches (user_id, breed_id) VALUES ($1, $2) RETURNING *',
+      [userId, breedId]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error saving match:', err);
+    res.status(500).json({ error: 'Failed to save match' });
+  }
+});
 
+app.get('/api/matches/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await pool.query(
+      'SELECT * FROM matches WHERE user_id = $1 ORDER BY matched_at DESC',
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching matches:', err);
+    res.status(500).json({ error: 'Failed to retrieve matches' });
+  }
+});
 
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 8080;
