@@ -18,6 +18,12 @@ const testConnection = async () => {
 };
 testConnection();
 
+const dbInfo = await pool.query('SELECT current_database(), inet_server_addr(), inet_server_port();');
+console.log('✅ REALLY connected to:');
+console.log('Database:', dbInfo.rows[0].current_database);
+console.log('Host:', dbInfo.rows[0].inet_server_addr);
+console.log('Port:', dbInfo.rows[0].inet_server_port);
+
 
 app.get('/api/dog-breeds', async (req, res) => {
   try {
