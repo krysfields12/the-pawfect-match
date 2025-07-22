@@ -7,57 +7,64 @@ const Account = () => {
   const [user, setUser] = useState(null);
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
-  const [editing, setEditing] = useState(false);
   const [photoURL, setPhotoURL] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [editingEmail, setEditingEmail] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState('');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        console.log("The current is:", auth.currentUser);
         setUser(currentUser);
         setDisplayName(currentUser.displayName || '');
         setPhotoURL(currentUser.photoURL || '');
-        setEmail(currentUser.email || '')
+        setEmail(currentUser.email || '');
       }
     });
     return () => unsubscribe();
   }, []);
 
-  const handleSave = async () => {
+  const handleSaveName = async () => {
     try {
       await updateProfile(auth.currentUser, { displayName });
       await auth.currentUser.reload();
       setDisplayName(auth.currentUser.displayName || '');
-      setEmail(auth.currentUser.email || '')
     } catch (error) {
       console.error('Error updating name:', error);
     } finally {
-      setEditing(false);
+      setEditingName(false);
     }
   };
 
-  const handlePhotoUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file || !auth.currentUser) return;
+const handlePhotoUpload = async (e) => {
+  const file = e.target.files[0];
+  if (!file || !auth.currentUser) return;
 
-    setUploading(true);
-    const storageRef = ref(storage, `profile_photos/${auth.currentUser.uid}`);
-    try {
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      await updateProfile(auth.currentUser, { photoURL: url });
+  setUploading(true);
+  const storageRef = ref(storage, `profile_photos/${auth.currentUser.uid}`);
+  try {
+    console.log("Uploading file...");
+    await uploadBytes(storageRef, file);
 
-      //This ensures Firebase updates the user object with the new photo
-      await auth.currentUser.reload();
-      setUser(auth.currentUser);
-      setPhotoURL(auth.currentUser.photoURL || '');
-    } catch (err) {
-      console.error('Error uploading profile photo:', err);
-    } finally {
-      setUploading(false);
-    }
-  };
+    console.log("Getting download URL...");
+    const url = await getDownloadURL(storageRef);
+    console.log("Download URL:", url);
+
+    await updateProfile(auth.currentUser, { photoURL: url });
+    await auth.currentUser.reload();
+
+    console.log("Reloaded user:", auth.currentUser);
+
+    setUser(auth.currentUser);
+    setPhotoURL(auth.currentUser.photoURL || '');
+  } catch (err) {
+    console.error('❌ Error uploading profile photo:', err);
+  } finally {
+    setUploading(false);
+  }
+};
+
 
   if (!user) return <p>Loading user info...</p>;
 
@@ -65,64 +72,74 @@ const Account = () => {
     <div className="account-page">
       <h2>Account Info</h2>
 
-      {/* Profile Photo */}
-      {photoURL ? (
-        <img
-          src={photoURL}
-          alt="Profile"
-          width="120"
-          style={{ borderRadius: '50%' }}
-        />
-      ) : (
-        <p>No profile photo set</p>
-      )}
+      <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+        {photoURL ? (
+          <img
+            src={photoURL}
+            alt="Profile"
+            width="120"
+            height="120"
+            style={{ borderRadius: '50%', objectFit: 'cover' }}
+          />
+        ) : (
+          <div style={{
+            width: '120px', height: '120px', borderRadius: '50%',
+            backgroundColor: '#ccc', display: 'flex',
+            justifyContent: 'center', alignItems: 'center',
+            fontSize: '40px', color: '#fff', margin: '0 auto'
+          }}>
+            {displayName?.charAt(0) || user.email.charAt(0)}
+          </div>
+        )}
+      </div>
 
-      <div style={{ marginTop: '1rem' }}>
-        <label htmlFor="photo-upload" className="upload-label">
-          Upload New Photo:
-        </label>
+      <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
         <input
           type="file"
-          id="photo-upload"
           accept="image/*"
           onChange={handlePhotoUpload}
         />
         {uploading && <p>Uploading...</p>}
+        {uploadStatus && <p>{uploadStatus}</p>}
       </div>
+
       <p>
         <strong>Email:</strong>{' '}
-        {editing ? (
+        {editingEmail ? (
           <>
             <input
-              type="text"
-              value={email}
+              type='text' 
+              value={email} 
               onChange={(e) => setEmail(e.target.value)}
+              style={{ backgroundColor: '#fff', color: '#000', padding: '4px' }} 
             />
-            <button onClick={handleSave}>Save</button>
+            <button onClick={() => setEditingEmail(false)}>Cancel</button>
           </>
         ) : (
           <>
             {email || 'N/A'}{' '}
-            <button onClick={() => setEditing(true)}>Edit Email</button>
+            <button onClick={() => setEditingEmail(true)}>Edit Email</button>
           </>
         )}
       </p>
 
       <p>
         <strong>Display Name:</strong>{' '}
-        {editing ? (
+        {editingName ? (
           <>
             <input
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
+              style={{ backgroundColor: '#fff', color: '#000', padding: '4px' }}
             />
-            <button onClick={handleSave}>Save</button>
+            <button onClick={handleSaveName}>Save</button>
+            <button onClick={() => setEditingName(false)}>Cancel</button>
           </>
         ) : (
           <>
             {displayName || 'N/A'}{' '}
-            <button onClick={() => setEditing(true)}>Edit Name</button>
+            <button onClick={() => setEditingName(true)}>Edit Name</button>
           </>
         )}
       </p>
@@ -143,6 +160,7 @@ const Account = () => {
 };
 
 export default Account;
+
 
 
 
