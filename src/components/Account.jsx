@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { auth, storage } from '../firebase';
-import { onAuthStateChanged, updateProfile } from 'firebase/auth';
+import { toast } from 'react-toastify';
+import { onAuthStateChanged, updateProfile, updateEmail } from 'firebase/auth';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import './Account.css';
 
 const Account = () => {
   const [user, setUser] = useState(null);
@@ -11,19 +13,62 @@ const Account = () => {
   const [uploading, setUploading] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        setDisplayName(currentUser.displayName || '');
-        setPhotoURL(currentUser.photoURL || '');
-        setEmail(currentUser.email || '');
+ useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    if (currentUser) {
+      setUser(currentUser);
+      setDisplayName(currentUser.displayName || '');
+      setEmail(currentUser.email || '');
+      setPhotoURL(currentUser.photoURL || '');
+
+      const uid = currentUser.uid;
+
+      if (!uid) {
+        console.warn('No UID found on currentUser.');
+        toast.error('Admin check failed: No UID found.');
+        return;
       }
-    });
-    return () => unsubscribe();
-  }, []);
+
+      const url = `${import.meta.env.VITE_API_BASE}/api/admin-check`;
+      console.log('Admin check URL:', url);
+
+      try {
+        const res = await fetch(url, {
+          headers: {
+            'x-user-id': uid,
+          },
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          console.error('Admin check failed:', errorData);
+          toast.info('You are not an admin.');
+          return;
+        }
+
+        const data = await res.json();
+        console.log('Admin check response:', data);
+
+        if (data.isAdmin) {
+          setIsAdmin(true);
+          toast.success('You are an admin!');
+        } else {
+          setIsAdmin(false);
+          toast.info('You are not an admin.');
+        }
+      } catch (err) {
+        console.error('Admin check fetch failed:', err);
+        toast.error('Admin check error');
+      }
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
+
 
   const handleSaveName = async () => {
     try {
@@ -37,129 +82,129 @@ const Account = () => {
     }
   };
 
-const handlePhotoUpload = async (e) => {
-  const file = e.target.files[0];
-  if (!file || !auth.currentUser) return;
+  const handleSaveEmail = async () => {
+    try {
+      await updateEmail(auth.currentUser, email);
+      await auth.currentUser.reload();
+      setEmail(auth.currentUser.email || '');
+      setErrorMsg('');
+    } catch (error) {
+      console.error('Error updating email:', error);
+      setErrorMsg('Email update failed. You may need to reauthenticate.');
+    } finally {
+      setEditingEmail(false);
+    }
+  };
 
-  setUploading(true);
-  const storageRef = ref(storage, `profile_photos/${auth.currentUser.uid}`);
-  try {
-    console.log("Uploading file...");
-    await uploadBytes(storageRef, file);
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !auth.currentUser) return;
 
-    console.log("Getting download URL...");
-    const url = await getDownloadURL(storageRef);
-    console.log("Download URL:", url);
+    setUploading(true);
+    const storageRef = ref(storage, `profile_photos/${auth.currentUser.uid}`);
+    try {
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      await updateProfile(auth.currentUser, { photoURL: url });
+      await auth.currentUser.reload();
+      setPhotoURL(auth.currentUser.photoURL || '');
+    } catch (err) {
+      console.error('Error uploading profile photo:', err);
+    } finally {
+      setUploading(false);
+    }
+  };
 
-    await updateProfile(auth.currentUser, { photoURL: url });
-    await auth.currentUser.reload();
-
-    console.log("Reloaded user:", auth.currentUser);
-
-    setUser(auth.currentUser);
-    setPhotoURL(auth.currentUser.photoURL || '');
-  } catch (err) {
-    console.error('❌ Error uploading profile photo:', err);
-  } finally {
-    setUploading(false);
-  }
-};
-
-
-  if (!user) return <p>Loading user info...</p>;
+  if (!user) return <div className="loading">Loading user info...</div>;
 
   return (
     <div className="account-page">
-      <h2>Account Info</h2>
+      <div className="account-card">
+        <div className="avatar-section">
+          {photoURL ? (
+            <img src={photoURL} alt="Profile" className="profile-pic" />
+          ) : (
+            <div className="default-avatar">
+              {displayName?.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <input type="file" accept="image/*" onChange={handlePhotoUpload} />
+          {uploading && <p>Uploading...</p>}
+        </div>
 
-      <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-        {photoURL ? (
-          <img
-            src={photoURL}
-            alt="Profile"
-            width="120"
-            height="120"
-            style={{ borderRadius: '50%', objectFit: 'cover' }}
-          />
-        ) : (
-          <div style={{
-            width: '120px', height: '120px', borderRadius: '50%',
-            backgroundColor: '#ccc', display: 'flex',
-            justifyContent: 'center', alignItems: 'center',
-            fontSize: '40px', color: '#fff', margin: '0 auto'
-          }}>
-            {displayName?.charAt(0) || user.email.charAt(0)}
+        <div className="field">
+          <label>Email:</label>
+          {editingEmail ? (
+            <>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <button onClick={handleSaveEmail}>Save</button>
+              <button onClick={() => setEditingEmail(false)}>Cancel</button>
+              {errorMsg && <p className="error">{errorMsg}</p>}
+            </>
+          ) : (
+            <>
+              <span>{email || 'N/A'}</span>
+              <button onClick={() => setEditingEmail(true)}>Edit</button>
+            </>
+          )}
+        </div>
+
+        <div className="field">
+          <label>Display Name:</label>
+          {editingName ? (
+            <>
+              <input
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+              />
+              <button onClick={handleSaveName}>Save</button>
+              <button onClick={() => setEditingName(false)}>Cancel</button>
+            </>
+          ) : (
+            <>
+              <span>{displayName || 'N/A'}</span>
+              <button onClick={() => setEditingName(true)}>Edit</button>
+            </>
+          )}
+        </div>
+
+        <div className="field">
+          <label>Email Verified:</label>
+          <span>{user.emailVerified ? 'Yes' : 'No'}</span>
+        </div>
+        <div className="field">
+          <label>Sign-in Method:</label>
+          <span>
+            {user.providerData.map((provider, idx) => (
+              <span key={idx}>
+                {provider.providerId.replace('.com', '')}
+                {idx < user.providerData.length - 1 ? ', ' : ''}
+              </span>
+            ))}
+          </span>
+        </div>
+
+        {isAdmin && (
+          <div className="admin-section">
+            <h3>Admin Tools</h3>
+            <p>You have administrative privileges.</p>
+            <a href="/set-role" className="admin-link">Manage Roles</a>
           </div>
         )}
       </div>
-
-      <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handlePhotoUpload}
-        />
-        {uploading && <p>Uploading...</p>}
-        {uploadStatus && <p>{uploadStatus}</p>}
-      </div>
-
-      <p>
-        <strong>Email:</strong>{' '}
-        {editingEmail ? (
-          <>
-            <input
-              type='text' 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)}
-              style={{ backgroundColor: '#fff', color: '#000', padding: '4px' }} 
-            />
-            <button onClick={() => setEditingEmail(false)}>Cancel</button>
-          </>
-        ) : (
-          <>
-            {email || 'N/A'}{' '}
-            <button onClick={() => setEditingEmail(true)}>Edit Email</button>
-          </>
-        )}
-      </p>
-
-      <p>
-        <strong>Display Name:</strong>{' '}
-        {editingName ? (
-          <>
-            <input
-              type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              style={{ backgroundColor: '#fff', color: '#000', padding: '4px' }}
-            />
-            <button onClick={handleSaveName}>Save</button>
-            <button onClick={() => setEditingName(false)}>Cancel</button>
-          </>
-        ) : (
-          <>
-            {displayName || 'N/A'}{' '}
-            <button onClick={() => setEditingName(true)}>Edit Name</button>
-          </>
-        )}
-      </p>
-
-      <p><strong>Email Verified:</strong> {user.emailVerified ? 'Yes' : 'No'}</p>
-
-      <p>
-        <strong>Sign-in Method:</strong>{' '}
-        {user.providerData.map((provider, index) => (
-          <span key={index}>
-            {provider.providerId.replace('.com', '')}
-            {index < user.providerData.length - 1 ? ', ' : ''}
-          </span>
-        ))}
-      </p>
     </div>
   );
 };
 
 export default Account;
+
+
+
 
 
 

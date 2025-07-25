@@ -1,11 +1,116 @@
 .account-page {
-  text-align: center;
-  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #4a90e2;
+  padding: 3rem 1rem;
+  min-height: calc(100vh - 64px); /* Account for navbar height */
+  box-sizing: border-box;
 }
 
-.account-actions button {
-  margin: 10px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
+.admin-section {
+  color: #222;
 }
+
+.account-card {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-section {
+  margin-bottom: 1.5rem;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  margin-bottom: 1rem;
+}
+
+.default-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #888;
+  color: #fff;
+  font-size: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 1rem;
+}
+
+input[type="file"] {
+  display: block;
+  margin: 0.5rem auto;
+}
+
+.field {
+  color:#222;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+.field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+
+.field span {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.field input[type="text"] {
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  color: #ffffff;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 0.3rem;
+}
+
+.field input[type="email"] {
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  color: #ffffff;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 0.3rem;
+}
+
+button {
+  background-color: #222;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  margin-top: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #444;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+
+
+
