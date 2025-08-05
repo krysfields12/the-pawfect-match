@@ -5,7 +5,6 @@ import { ToastContainer } from 'react-toastify';
 import { auth } from './firebase';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
-
 import DogList from './components/DogList';
 import DogProfile from './components/DogProfile';
 import PersonalityQuiz from './components/PersonalityQuiz';
@@ -28,7 +27,7 @@ function App() {
       setUser(currentUser);
       if (currentUser) {
         try {
-          const res = await fetch('http://localhost:8080/api/admin-check', {
+          const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/admin-check`, {
             headers: {
               'x-user-id': currentUser.uid,
             },
