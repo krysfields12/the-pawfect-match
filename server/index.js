@@ -5,21 +5,19 @@ import admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 
-// Load service account JSON from environment variable
-const raw = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-const serviceAccount = JSON.parse(raw.replace(/\\n/g, '\n'));
+const base64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+
+if (!base64) {
+  throw new Error("Missing FIREBASE_SERVICE_ACCOUNT_BASE64 env variable");
+}
+
+const jsonString = Buffer.from(base64, 'base64').toString('utf8');
+const serviceAccount = JSON.parse(jsonString);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-
-// Initialize Firebase Admin
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-}
 
 const firestore = admin.firestore();
 
