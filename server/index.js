@@ -5,14 +5,12 @@ import admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 
-// Load service account JSON
-
+// Load service account JSON from environment variable
 const raw = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 const serviceAccount = JSON.parse(raw.replace(/\\n/g, '\n'));
 
-
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
 });
 
 
