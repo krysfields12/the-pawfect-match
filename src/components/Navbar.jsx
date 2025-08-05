@@ -30,7 +30,13 @@ const Navbar = ({ user, isAdmin }) => {
             <>
               <Link to="/account">Account</Link>
               <Link to="/matches">My Matches</Link>
-              {isAdmin && <Link to="/set-role">Admin Tools</Link>}
+              {/* {isAdmin && <Link to="/set-role">Admin Tools</Link>} */}
+              {isAdmin && (
+                    <>
+                      <Link to="/admin">Admin Dashboard</Link>
+                      <Link to="/set-role">Admin Tools</Link>
+                    </>
+                )}
               <button onClick={handleLogout} className="logout-button">Logout</button>
             </>
           )}
