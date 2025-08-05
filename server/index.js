@@ -4,14 +4,15 @@ import cors from 'cors';
 import admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
-import { readFile } from 'fs/promises';
 
 // Load service account JSON
-const serviceAccount = JSON.parse(
-  await readFile(
-    new URL('./my-pawfect-match-firebase-adminsdk-fbsvc-ab34dab9be.json', import.meta.url)
-  )
-);
+
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 
 // Initialize Firebase Admin
 if (!admin.apps.length) {
