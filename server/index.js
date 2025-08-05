@@ -7,7 +7,9 @@ import { getFirestore } from 'firebase-admin/firestore';
 
 // Load service account JSON
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+const rawKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+const serviceAccount = JSON.parse(rawKey.replace(/\\n/g, '\n'));
+
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
