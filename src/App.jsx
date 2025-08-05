@@ -23,6 +23,7 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    console.log('VITE_API_BASE:', import.meta.env.VITE_API_BASE);
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
