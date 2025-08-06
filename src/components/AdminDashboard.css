@@ -43,8 +43,8 @@
   gap: 0.75rem;
   flex-wrap: wrap;
   justify-content: space-between;
-  color: #333; /* ✅ MAKE TEXT DARK */
-  font-size: 1rem; /* ✅ EASY TO READ */
+  color: #333; 
+  font-size: 1rem;
 }
 
 .admin-dashboard input[type="text"] {
