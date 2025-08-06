@@ -103,7 +103,7 @@ const QuizResults = () => {
           )
         );
 
-        // ✨ Save new matches
+        //Save new matches
         const cleanedMatches = topMatches.map((match) => {
           const cleaned = {};
           for (const [key, value] of Object.entries(match)) {
@@ -116,10 +116,8 @@ const QuizResults = () => {
         });
 
         await Promise.all(cleanedMatches.map((match) => addDoc(matchesRef, match)));
-
-        console.log("✅ Saved matches!");
       } catch (err) {
-        console.error('❌ Error in fetchAndMatch:', err);
+        console.error('Error in fetchAndMatch:', err);
       } finally {
         setLoading(false);
       }

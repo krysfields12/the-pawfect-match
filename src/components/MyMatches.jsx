@@ -11,7 +11,7 @@ const MyMatches = () => {
       const user = auth.currentUser;
 
       if (!user) {
-        console.warn("⚠️ No user logged in.");
+        console.warn("No user logged in.");
         setLoading(false);
         return;
       }
@@ -24,11 +24,9 @@ const MyMatches = () => {
           id: doc.id,
           ...doc.data()
         }));
-
-        console.log("✅ Fetched matches from Firestore:", fetchedMatches);
         setMatches(fetchedMatches);
       } catch (err) {
-        console.error('❌ Error fetching matches from Firestore:', err);
+        console.error('Error fetching matches from Firestore:', err);
       } finally {
         setLoading(false);
       }
