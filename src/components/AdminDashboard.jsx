@@ -119,27 +119,30 @@ const AdminDashboard = () => {
   };
 
   const handleAssignAdmin = async (targetUserId) => {
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/admin/assign-role/${targetUserId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-id': user.uid,
-        },
-        body: JSON.stringify({ role: 'admin' }),
-      });
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/set-role`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-user-id': user.uid,
+      },
+      body: JSON.stringify({ targetUid: targetUserId, role: 'admin' }),
+    });
 
-      if (res.ok) {
-        toast.success('Admin role assigned successfully!');
-        fetchUsers(user.uid);
-      } else {
-        toast.error('Failed to assign admin role.');
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error('Error assigning admin role');
+    if (res.ok) {
+      toast.success('Admin role assigned successfully!');
+      fetchUsers(user.uid); // refresh list
+    } else {
+      const errorText = await res.text();
+      console.error('Failed response:', errorText);
+      toast.error('Failed to assign admin role.');
     }
-  };
+  } catch (err) {
+    console.error(err);
+    toast.error('Error assigning admin role');
+  }
+};
+
 
   if (loading) return <p>Checking admin access...</p>;
   if (!isAdmin) return <p>Access denied.</p>;

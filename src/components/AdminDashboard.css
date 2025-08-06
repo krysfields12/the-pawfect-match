@@ -54,6 +54,7 @@
   border-radius: 6px;
   flex: 1;
   min-width: 200px;
+  color: white;
 }
 
 .admin-dashboard button {
