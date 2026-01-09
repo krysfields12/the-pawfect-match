@@ -1,0 +1,40 @@
+Lifestyle & personality quiz (the heart)
+This is the product.
+
+Must include:
+- Living situation (house/apartment/yard)
+- Activity level
+- Time availability
+- Experience with dogs
+- Allergies / shedding tolerance
+- Preferences (size, age, temperament)
+
+Output:
+- 3–5 recommended breeds
+- Clear why for each recommendation
+- Transparent scoring or explanation
+**No AI magic yet — just solid logic.
+
+Breed profile pages (trust + SEO)
+
+Each recommended breed links to a page with:
+- Overview
+- Energy level
+- Space needs
+- Grooming needs
+- Common challenges
+- “Good fit if / Not a good fit if”
+**This builds trust and long-term traffic.
+
+Adoption-first local results (lightweight)
+Keep this very simple.
+MVP version:
+
+- User enters ZIP code
+See links to:
+- Local shelters
+- Rescue organizations
+Optional: filtered by recommended breeds
+
+Do not need full listings yet.
+Save & share results
