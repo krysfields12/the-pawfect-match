@@ -38,3 +38,11 @@ Optional: filtered by recommended breeds
 
 Do not need full listings yet.
 Save & share results
+
+Soft Monetization
+- Monetization should feel invisible.
+MVP approach:
+One “Recommended next steps” section:
+- Adoption checklist
+- Training basics
+- Starter supplies (affiliate links)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { auth, storage } from '../firebase';
+import { auth, storage } from '../../firebase';
 import { toast } from 'react-toastify';
 import { onAuthStateChanged, updateProfile, updateEmail } from 'firebase/auth';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';

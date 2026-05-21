@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { auth } from '../firebase';
+import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import './AdminDashboard.css';

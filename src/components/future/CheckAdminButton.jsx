@@ -1,6 +1,6 @@
 // src/components/CheckAdminButton.jsx
 import React from 'react';
-import { auth } from '../firebase';
+import { auth } from '../../firebase';
 import { toast } from 'react-toastify';
 
 const CheckAdminButton = () => {
